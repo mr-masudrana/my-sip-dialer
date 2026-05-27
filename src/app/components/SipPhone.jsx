@@ -83,14 +83,18 @@ export default function SipPhone() {
                 sipPluginRef.current = pluginHandle;
                 setCallStatus('Registering with Bangla Calling...');
 
+                                // বাংলা কলিং সার্ভারের জন্য কাস্টমাইজড REGISTER রিকোয়েস্ট
                 const registerBody = {
                   request: "register",
                   type: "secret",
-                  username: `sip:${sipUser}@${sipServerIp}`,
+                  username: `sip:${sipUser}@${sipServerIp}`, // sip:09649816573@103.170.231.10
+                  authuser: sipUser,                        // অনেক সার্ভারে এটি বাধ্যতামূলক
                   secret: password,
-                  proxy: `sip:${sipServerIp}:5060`,
-                  refresh: true
+                  proxy: `sip:${sipServerIp}:5060`,         // স্ট্যান্ডার্ড UDP পোর্ট
+                  refresh: true,
+                  master_id: opaqueId                       // সেশন ট্র্যাকিং টোকেন
                 };
+
                 pluginHandle.send({ message: registerBody });
               },
               error: (error) => {
